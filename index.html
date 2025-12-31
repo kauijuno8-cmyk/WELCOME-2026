@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy New Year 💙</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 430px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 22px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      animation: fadeIn 1.3s ease;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-top: 0;
+      margin-bottom: 15px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      background: #ffd369;
+      color: #000;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    p {
+      line-height: 1.7;
+      font-size: 0.95rem;
+      margin-top: 25px;
+      display: none;
+      text-align: left;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      animation: slideUp 0.8s ease;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+      text-align: right;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <canvas id="fireworks"></canvas>
+
+  <div class="card">
+    <h1>🎆 WELCOME 2026 🎆</h1>
+
+    <button id="openBtn">Please Open My Message For You 💌</button>
+
+    <p id="message">
+      So.. hi yumi💙 happy new year! 😊<br><br>
+
+      so un nga uhm I just want to take this moment to say thank you for being part of my year
+      kasi naging special ka para sa’akin. Kahit papaano, naging parte ka ng 2025 ko,
+      and im thankful na nagkasabay tayong dalawa kahit ganon and panandalian lang.<br><br>
+
+      and yah im really happy, and I truly appreciate all the moments we shared
+      lalo na yung mga simple conversations kahit sometimes boring ako kausap HAHAHAH.
+      and kahit may mga times na hindi tayo nagkakaintindihan, or d ko maintindihan
+      grateful pa rin ako kasi naging genuine at totoo lahat 🤗.<br><br>
+
+      and i want to say sorry paren that time na offend kita hehe 🫰<br><br>
+
+      so sana ung 2026 mo ay maging mas positive at mas masaya para sa’yo,
+      and wishing you and to your family with a good health, blessings, at peace of mind.
+      sana ung mga nararamdaman mo na ipinaranas ngayon na masakit,
+      sana mawala na this new year, and kalimutan na ung mga tao na naging negative sayo.<br><br>
+
+      hopefully 2026 will be a better year for you.
+      sana mas marami pang moments na magpapangiti sa’yo,
+      at mas madaming ma-create na memories na special sayo 
+      yung tipong kapag naalala mo, ngumingiti ka na agad haha.<br><br>
+
+      so un nga lets celebrate this end of 2025 and welcome the 2026
+      with full of love, joy, hope (by coco martin 😆) 🥂<br><br>
+
+      blessed HAPPY NEW YEAR and always ingat ka palagi 🤍🤍🤍🤍
+    </p>
+
+    <div class="footer" id="footer">
+      — Daryl💙😉
+    </div>
+  </div>
+
+  <script>
+    // Surprise button
+    const btn = document.getElementById("openBtn");
+    const msg = document.getElementById("message");
+    const footer = document.getElementById("footer");
+
+    btn.addEventListener("click", () => {
+      btn.style.display = "none";
+      msg.style.display = "block";
+      footer.style.display = "block";
+    });
+
+    // Realistic fireworks + shining stars + bigger explosions
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+
+    function resize() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    let fireworks = [];
+    let stars = [];
+    const gravity = 0.05;
+
+    // Initialize stars
+    for(let i=0;i<150;i++){
+      stars.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        radius: Math.random()*1.5+0.5,
+        alpha: Math.random(),
+        delta: Math.random()*0.02+0.005
+      });
+    }
+
+    function createFirework() {
+      const x = Math.random() * canvas.width;
+      const y = canvas.height;
+      const hue = Math.random() * 360;
+      fireworks.push({
+        x, y,
+        targetY: Math.random() * canvas.height * 0.4, // higher explosion
+        particles: [],
+        exploded: false,
+        hue
+      });
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0,0,0,0.2)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw stars
+      stars.forEach(s=>{
+        s.alpha += s.delta;
+        if(s.alpha>1 || s.alpha<0) s.delta*=-1;
+        ctx.globalAlpha = s.alpha;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // Fireworks
+      for (let i = fireworks.length - 1; i >= 0; i--) {
+        const f = fireworks[i];
+
+        if (!f.exploded) {
+          f.y -= 4 + Math.random() * 2;
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = `hsl(${f.hue},100%,70%)`;
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (f.y <= f.targetY) {
+            f.exploded = true;
+            let particleCount = 150 + Math.random()*100; // More particles
+            for (let j = 0; j < particleCount; j++) {
+              const angle = Math.random() * 2 * Math.PI;
+              const speed = Math.random() * 7 + 2; // wider spread
+              f.particles.push({
+                x: f.x,
+                y: f.y,
+                angle,
+                speed,
+                radius: Math.random() * 3 + 1,
+                alpha: 1,
+                decay: Math.random() * 0.015 + 0.008,
+                color: `hsl(${f.hue + Math.random() * 60 - 30}, 100%, 60%)`
+              });
+            }
+          }
+        } else {
+          f.particles.forEach((p, idx) => {
+            p.x += Math.cos(p.angle) * p.speed;
+            p.y += Math.sin(p.angle) * p.speed + gravity;
+            p.alpha -= p.decay;
+
+            ctx.globalAlpha = p.alpha;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.alpha <= 0) f.particles.splice(idx, 1);
+          });
+
+          if (f.particles.length === 0) fireworks.splice(i, 1);
+        }
+      }
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animate);
+    }
+
+    setInterval(createFirework, 700);
+    animate();
+  </script>
+
+</body>
+</html>
